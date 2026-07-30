@@ -20,7 +20,7 @@ class InventoryDialog(QDialog) :
       "맨체스터 유나이티드(Manchester United)" : "60",
     }
 
-    self.type_codes = {"HOME" : "1", "AWAY" : "1"}
+    self.type_codes = {"HOME" : "0", "AWAY" : "1"}
 
     if self.mode == "add" :
       self.setWindowTitle("신규 유니폼 등록")
