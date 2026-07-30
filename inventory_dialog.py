@@ -97,10 +97,10 @@ class InventoryDialog(QDialog) :
 
   def generate_serial_number(self, team_display_name, j_type, back_num) :
     t_code = self.team_codes.get(team_display_name, "10")
-    type_code = self.type_codes.get(j_type, "01")
     num_code = f"{back_num:02d}"
+    type_code = "0" if j_type == "HOME" else "1"
 
-    return f"{t_code}{type_code}{num_code}"
+    return f"{t_code}{num_code}{type_code}"
 
   def save_data(self) :
     if self.mode == "add" :
