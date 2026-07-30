@@ -8,7 +8,6 @@ DB_CONFIG = dict(
   password = "0516",
   database = "jerseydb",
   charset = "utf8mb4",
-  cursorclass = pymysql.cursors.DictCursor
 )
 
 class DB :
@@ -32,7 +31,7 @@ class DB :
         return res["cnt"] == 1
 
   # 조회
-  def fetch_jerseys_by_team(self, team_keyword) :
+  def get_jerseys(self, team_keyword) :
     sql = """
         SELECT id, serial_number, back_number, product_name, jersey_type, stock, price
         FROM jerseys
