@@ -19,17 +19,17 @@ class DB :
     return pymysql.connect(**self.config)
 
   # 로그인 검증
-  def verify_admin(self, username, password) :
+  def verify_user(self, username, password) :
     sql = """
-        SELECT COUNT(*) AS cnt 
+        SELECT COUNT(*) AS cnt
         FROM users
-        WHERE username = %s AND password = %s AND role = 'ADMIN'
+        WHERE username = %s AND password = %s
     """
     with self.connect() as conn :
       with conn.cursor() as cur :
         cur.execute(sql, (username, password))
         res = cur.fetchone()
-        return res['cnt'] == 1
+        return res["cnt"] == 1
 
   # 조회
   def fetch_jerseys_by_team(self, team_keyword) :
@@ -82,28 +82,24 @@ class DB :
         return False
 
   # 수정
-  def update_jersey(self, id, serial_number, back_number, product_name, jersey_type, stock, price, is_admin = False) :
+  def update_stock(self, id, new_stock, is_admin = False) :
     if not is_admin :
       return False
 
-    sql = """
-        UPDATE jerseys
-        SET serial_number = %s, back_number = %s, product_name = %s, jersey_type = %s, stock = %s, price = %s
-        WHERE id = %s
-    """
+    sql = "UPDATE jerseys SET stock = %s WHERE id = %s"
     with self.connect() as conn :
       try :
         with conn.cursor() as cur :
-          cur.execute(sql, (serial_number, back_number, product_name, jersey_type, stock, price, id))
+          cur.execute(sql, (new_stock, id))
         conn.commit()
         return True
-      except Exception as e:
-        print(f"[Error] 유니폼 수정 실패 : {e}")
+      except Exception as e :
+        print(f"[Error] 수량 수정 실패 : {e}")
         conn.rollback()
         return False
 
   # 삭제
-  def delete_jersey(self, id, is_admin=False):
+  def delete_jersey(self, id, is_admin = False):
     if not is_admin:
         return False
 
