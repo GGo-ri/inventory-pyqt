@@ -3,9 +3,10 @@ from PyQt5.QtCore import Qt
 from db_helper import DB, DB_CONFIG
 
 class InventoryDialog(QDialog) :
-  def __init__(self, mode = "add", jersey_id = None, product_name = "", current_stock = 0, is_admin = False, parent = None) :
+  def __init__(self, mode = "add", selected_team = "", jersey_id = None, product_name = "", current_stock = 0, is_admin = False, parent = None) :
     super().__init__(parent)
     self.mode = mode
+    self.selected_team = selected_team
     self.jersey_id = jersey_id
     self.is_admin = is_admin
     self.db = DB(**DB_CONFIG)
@@ -37,6 +38,12 @@ class InventoryDialog(QDialog) :
     if self.mode == "add" :
       self.combo_team = QComboBox()
       self.combo_team.addItems(list(self.team_codes.keys()))
+
+      if self.selected_team :
+        for idx, team_text in enumerate(self.team_codes.keys()) :
+          if self.selected_team in team_text :
+            self.combo_team.setCurrentIndex(idx)
+            break
 
       self.input_back_num = QSpinBox()
       self.input_back_num.setRange(1, 99)
