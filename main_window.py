@@ -92,7 +92,16 @@ class MainWindow(QMainWindow) :
     self.lbl_team_title.setStyleSheet("font-size: 18px; font-weight: bold;")
     header_layout.addWidget(self.lbl_team_title)
 
-    header_layout.addStretch()
+    header_layout.addStretch(1)
+
+    self.input_search = QLineEdit()
+    self.input_search.setPlaceholderText("예시 : 홀란, 9")
+    self.input_search.setFixedWidth(320)
+    self.input_search.setFixedHeight(36)
+    self.input_search.textChanged.connect(self.perform_search)
+    header_layout.addWidget(self.input_search)
+
+    header_layout.addStretch(1)
 
     self.btn_back = QPushButton("팀 선택 화면으로 돌아가기")
     self.btn_back.setFixedWidth(210)
@@ -160,6 +169,8 @@ class MainWindow(QMainWindow) :
     korean_team_name = team_display_name.split("(")[0].strip()
     self.lbl_team_title.setText(f"[{korean_team_name}] 유니폼 재고 현황")
 
+    self.input_search.clear()
+
     self.load_data()
     self.resize(1000, 600)
     self.stack.setCurrentIndex(1)
@@ -177,7 +188,9 @@ class MainWindow(QMainWindow) :
 
     rows = self.db.get_jerseys(team = korean_team_name)
     rows = sorted(rows, key = lambda x: int(x[2]))
+    self.display_rows_in_table(rows, korean_team_name, team_code)
 
+  def display_rows_in_table(self, rows, korean_team_name, team_code) :
     self.table.setRowCount(0)
     for row_idx, row_data in enumerate(rows) :
       self.table.insertRow(row_idx)
@@ -188,26 +201,51 @@ class MainWindow(QMainWindow) :
         if col_idx == 3 :
           raw_name = str(value)
           player_name = raw_name.replace(korean_team_name, "").strip()
-          item_text = f"{player_name} ({team_code})" if team_code else player_name
+          item_text = (
+              f"{player_name} ({team_code})" if team_code else player_name
+          )
         elif col_idx == 6 :
           item_text = f"{value:,}"
-        else :
+        else:
           item_text = str(value)
 
         item = QTableWidgetItem(item_text)
         item.setTextAlignment(Qt.AlignCenter)
 
-        if col_idx == 4 :
-          if "HOME" in str(value).upper() :
+        if col_idx == 4:
+          if "HOME" in str(value).upper():
             item.setBackground(QColor("#E3F2FD"))
-          elif "AWAY" in str(value).upper() :
+          elif "AWAY" in str(value).upper():
             item.setBackground(QColor("#FFF3E0"))
 
-        if col_idx == 5 and stock_count <= 5 :
+        if col_idx == 5 and stock_count <= 5:
           item.setBackground(QColor("#EDA9B4"))
           item.setForeground(QColor("#FF0000"))
 
         self.table.setItem(row_idx, col_idx, item)
+
+  def perform_search(self) :
+    if not self.current_team :
+      return
+
+    query = self.input_search.text().strip().lower()
+    korean_team_name = self.current_team.split("(")[0].strip()
+    team_code = self.team_code_map.get(korean_team_name, "")
+
+    rows = self.db.get_jerseys(team = korean_team_name)
+
+    if query :
+      filtered_rows = []
+      for row in rows :
+        number = str(row[2]).lower()
+        product_name = str(row[3]).lower()
+
+        if query in number or query in product_name :
+          filtered_rows.append(row)
+      rows = filtered_rows
+
+    rows = sorted(rows, key = lambda x: int(x[2]))
+    self.display_rows_in_table(rows, korean_team_name, team_code)
 
   # 유니폼 신규 등록
   def open_add_dialog(self) :
