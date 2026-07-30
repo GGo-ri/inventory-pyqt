@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (
 )
 from db_helper import DB, DB_CONFIG
 from inventory_dialog import InventoryDialog
+from PyQt5.QtGui import QColor
 
 class MainWindow(QMainWindow) :
   def __init__(self, is_admin = False) :
@@ -176,6 +177,8 @@ class MainWindow(QMainWindow) :
     for row_idx, row_data in enumerate(rows) :
       self.table.insertRow(row_idx)
 
+      stock_count = int(row_data[5])
+
       for col_idx, value in enumerate(row_data) :
         if col_idx == 3 :
           raw_name = str(value)
@@ -188,6 +191,17 @@ class MainWindow(QMainWindow) :
 
         item = QTableWidgetItem(item_text)
         item.setTextAlignment(Qt.AlignCenter)
+
+        if col_idx == 4 :
+          if "HOME" in str(value).upper() :
+            item.setBackground(QColor("#E3F2FD"))
+          elif "AWAY" in str(value).upper() :
+            item.setBackground(QColor("#FFF3E0"))
+
+        if col_idx == 5 and stock_count <= 5 :
+          item.setBackground(QColor("#EDA9B4"))
+          item.setForeground(QColor("#FF0000"))
+
         self.table.setItem(row_idx, col_idx, item)
 
   # 유니폼 신규 등록
