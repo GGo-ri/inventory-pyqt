@@ -23,6 +23,15 @@ class MainWindow(QMainWindow) :
       "맨체스터 유나이티드(Manchester United)",
     ]
 
+    self.team_code_map = {
+      "맨체스터 시티" : "MCI",
+      "리버풀" : "LIV",
+      "애스턴 빌라" : "AVL",
+      "첼시" : "CHE",
+      "아스널" : "ARS",
+      "맨체스터 유나이티드" : "MUN",
+    }
+
     self.setWindowTitle(f"유니폼 재고 관리 시스템 ({'관리자 권한' if self.is_admin else '게스트 모드'})")
     self.resize(500, 650)
 
@@ -39,7 +48,7 @@ class MainWindow(QMainWindow) :
   def create_team_select_page(self) :
     page = QWidget()
     layout = QVBoxLayout()
-    layout.setContentsMargins(30, 30, 30, 30)
+    layout.setContentsMargins(40, 40, 40, 40)
     layout.setSpacing(12)
 
     title = QLabel("프리미어리그 팀 선택")
@@ -74,18 +83,22 @@ class MainWindow(QMainWindow) :
     page = QWidget()
     layout = QVBoxLayout()
     layout.setContentsMargins(20, 20, 20, 20)
+    layout.setSpacing(10)
 
     header_layout = QHBoxLayout()
 
+    self.lbl_team_title = QLabel("")
+    self.lbl_team_title.setStyleSheet("font-size: 18px; font-weight: bold;")
+    header_layout.addWidget(self.lbl_team_title)
+
+    header_layout.addStretch()
+
     self.btn_back = QPushButton("팀 선택 화면으로 돌아가기")
-    self.btn_back.setFixedWidth(180)
+    self.btn_back.setFixedWidth(210)
+    self.btn_back.setFixedHeight(36)
+    self.btn_back.setStyleSheet("font-size: 13px; font-weight: bold;")
     self.btn_back.clicked.connect(self.go_to_team_select)
     header_layout.addWidget(self.btn_back)
-
-    self.lbl_team_title = QLabel("")
-    self.lbl_team_title.setStyleSheet("font-size: 16px; font-weight: bold;")
-    self.lbl_team_title.setAlignment(Qt.AlignCenter)
-    header_layout.addWidget(self.lbl_team_title)
 
     layout.addLayout(header_layout)
 
@@ -107,6 +120,10 @@ class MainWindow(QMainWindow) :
     self.btn_add = QPushButton("신규 유니폼 등록")
     self.btn_edit = QPushButton("재고 수량 수정")
     self.btn_delete = QPushButton("유니폼 삭제")
+
+    self.btn_add.setFixedHeight(40)
+    self.btn_edit.setFixedHeight(40)
+    self.btn_delete.setFixedHeight(40)
 
     self.btn_add.clicked.connect(self.open_add_dialog)
     self.btn_edit.clicked.connect(self.open_edit_dialog)
@@ -132,9 +149,11 @@ class MainWindow(QMainWindow) :
     self.lbl_team_title.setText(f"[{korean_team_name}] 유니폼 재고 현황")
 
     self.load_data()
+    self.resize(1000, 600)
     self.stack.setCurrentIndex(1)
 
   def go_to_team_select(self) :
+    self.resize(500, 650)
     self.stack.setCurrentIndex(0)
 
   def load_data(self) :
@@ -142,8 +161,9 @@ class MainWindow(QMainWindow) :
       return
 
     korean_team_name = self.current_team.split("(")[0].strip()
-    rows = self.db.get_jerseys(team = korean_team_name)
+    team_code = self.team_code_map.get(korean_team_name, "")
 
+    rows = self.db.get_jerseys(team = korean_team_name)
     rows = sorted(rows, key = lambda x: int(x[2]))
 
     self.table.setRowCount(0)
@@ -151,7 +171,11 @@ class MainWindow(QMainWindow) :
       self.table.insertRow(row_idx)
 
       for col_idx, value in enumerate(row_data) :
-        if col_idx == 6:
+        if col_idx == 3 :
+          raw_name = str(value)
+          player_name = raw_name.replace(korean_team_name, "").strip()
+          item_text = f"{player_name} ({team_code})" if team_code else player_name
+        elif col_idx == 6 :
           item_text = f"{value:,}"
         else :
           item_text = str(value)
