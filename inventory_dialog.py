@@ -61,7 +61,7 @@ class InventoryDialog(QDialog) :
       self.input_price = QSpinBox()
       self.input_price.setRange(0, 10000000)
       self.input_price.setSingleStep(10000)
-      self.input_price.setValue(195000)
+      self.input_price.setValue(0)
 
       form_layout.addRow("팀 선택 : ", self.combo_team)
       form_layout.addRow("등번호 : ", self.input_back_num)
