@@ -28,7 +28,7 @@ class DB :
       with conn.cursor() as cur :
         cur.execute(sql, (username, password))
         res = cur.fetchone()
-        return res["cnt"] == 1
+        return res[0] == 1
 
   # 조회
   def get_jerseys(self, team = "") :
