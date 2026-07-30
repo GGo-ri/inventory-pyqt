@@ -31,7 +31,7 @@ class DB :
         return res["cnt"] == 1
 
   # 조회
-  def get_jerseys(self, team_keyword) :
+  def get_jerseys(self, team = "") :
     sql = """
         SELECT id, serial_number, back_number, product_name, jersey_type, stock, price
         FROM jerseys
