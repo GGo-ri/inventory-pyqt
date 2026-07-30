@@ -109,6 +109,11 @@ class MainWindow(QMainWindow) :
       ["ID", "일련번호", "등번호", "제품명", "종류", "재고 수량", "가격(원)",]
     )
 
+    header_font = self.table.horizontalHeader().font()
+    header_font.setBold(True)
+    header_font.setPixelSize(17)
+    self.table.horizontalHeader().setFont(header_font)
+
     self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
     self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
     self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
