@@ -20,7 +20,7 @@ class InventoryDialog(QDialog) :
       "맨체스터 유나이티드(Manchester United)" : "60",
     }
 
-    self.type_codes = {"HOME" : "01", "AWAY" : "02"}
+    self.type_codes = {"HOME" : "1", "AWAY" : "1"}
 
     if self.mode == "add" :
       self.setWindowTitle("신규 유니폼 등록")
@@ -98,7 +98,7 @@ class InventoryDialog(QDialog) :
   def generate_serial_number(self, team_display_name, j_type, back_num) :
     t_code = self.team_codes.get(team_display_name, "10")
     num_code = f"{back_num:02d}"
-    type_code = "0" if j_type == "HOME" else "1"
+    type_code = self.type_codes.get(j_type, "0")
 
     return f"{t_code}{num_code}{type_code}"
 
