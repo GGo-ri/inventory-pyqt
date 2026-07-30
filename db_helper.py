@@ -32,6 +32,9 @@ class DB :
 
   # 조회
   def get_jerseys(self, team = "") :
+    return self.fetch_jerseys_by_team(team_keyword = team)
+
+  def fetch_jerseys_by_team(self, team_keyword = "") :
     sql = """
         SELECT id, serial_number, back_number, product_name, jersey_type, stock, price
         FROM jerseys
