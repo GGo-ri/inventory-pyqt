@@ -144,7 +144,7 @@ class MainWindow(QMainWindow) :
     korean_team_name = self.current_team.split("(")[0].strip()
     rows = self.db.get_jerseys(team = korean_team_name)
 
-    rows.sort(key = lambda x: int(x[2]))
+    rows = sorted(rows, key = lambda x: int(x[2]))
 
     self.table.setRowCount(0)
     for row_idx, row_data in enumerate(rows) :
