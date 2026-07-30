@@ -78,7 +78,7 @@ class MainWindow(QMainWindow) :
     header_layout = QHBoxLayout()
 
     self.btn_back = QPushButton("팀 선택 화면으로 돌아가기")
-    self.btn_back.setFixedWidth(100)
+    self.btn_back.setFixedWidth(180)
     self.btn_back.clicked.connect(self.go_to_team_select)
     header_layout.addWidget(self.btn_back)
 
@@ -142,7 +142,6 @@ class MainWindow(QMainWindow) :
       return
 
     korean_team_name = self.current_team.split("(")[0].strip()
-
     rows = self.db.get_jerseys(team = korean_team_name)
 
     rows.sort(key = lambda x: int(x[2]))
@@ -163,7 +162,13 @@ class MainWindow(QMainWindow) :
 
   # 유니폼 신규 등록
   def open_add_dialog(self) :
-    dialog = InventoryDialog(mode = "add", is_admin = self.is_admin, parent = self)
+    korean_team_name = (self.current_team.split("(")[0].strip() if self.current_team else "")
+    dialog = InventoryDialog(
+      mode = "add",
+      selected_team = korean_team_name,
+      is_admin = self.is_admin,
+      parent = self,
+    )
     if dialog.exec_() :
       self.load_data()
 
