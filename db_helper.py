@@ -84,15 +84,15 @@ class DB :
         return False
 
   # 수정
-  def update_stock(self, id, new_stock, is_admin = False) :
+  def update_stock(self, id, new_stock, new_price, is_admin = False) :
     if not is_admin :
       return False
 
-    sql = "UPDATE jerseys SET stock = %s WHERE id = %s"
+    sql = "UPDATE jerseys SET stock = %s, price = %s WHERE id = %s"
     with self.connect() as conn :
       try :
         with conn.cursor() as cur :
-          cur.execute(sql, (new_stock, id))
+          cur.execute(sql, (new_stock, new_price, id))
         conn.commit()
         return True
       except Exception as e :

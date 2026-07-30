@@ -118,7 +118,7 @@ class MainWindow(QMainWindow) :
     btn_layout = QHBoxLayout()
 
     self.btn_add = QPushButton("신규 유니폼 등록")
-    self.btn_edit = QPushButton("재고 수량 수정")
+    self.btn_edit = QPushButton("재고 수정")
     self.btn_delete = QPushButton("유니폼 삭제")
 
     button_style = """
@@ -213,11 +213,15 @@ class MainWindow(QMainWindow) :
     product_name = self.table.item(selected_row, 3).text()
     current_stock = int(self.table.item(selected_row, 5).text())
 
+    raw_price_str = self.table.item(selected_row, 6).text()
+    current_price = int(raw_price_str.replace(",", ""))
+
     dialog = InventoryDialog(
-        mode = "edit_stock",
+        mode = "edit",
         jersey_id = jersey_id,
         product_name = product_name,
         current_stock = current_stock,
+        current_price = current_price,
         is_admin = self.is_admin,
         parent = self,
     )

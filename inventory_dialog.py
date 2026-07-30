@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from db_helper import DB, DB_CONFIG
 
 class InventoryDialog(QDialog) :
-  def __init__(self, mode = "add", selected_team = "", jersey_id = None, product_name = "", current_stock = 0, is_admin = False, parent = None) :
+  def __init__(self, mode = "add", selected_team = "", jersey_id = None, product_name = "", current_stock = 0, current_price = 0, is_admin = False, parent = None) :
     super().__init__(parent)
     self.mode = mode
     self.selected_team = selected_team
@@ -29,9 +29,9 @@ class InventoryDialog(QDialog) :
       self.setWindowTitle("재고 수량 수정")
       self.resize(300, 150)
 
-    self.init_ui(product_name, current_stock)
+    self.init_ui(product_name, current_stock, current_price)
 
-  def init_ui(self, product_name, current_stock) :
+  def init_ui(self, product_name, current_stock, current_price) :
     layout = QVBoxLayout()
     form_layout = QFormLayout()
 
@@ -70,7 +70,7 @@ class InventoryDialog(QDialog) :
       form_layout.addRow("수량 : ", self.input_stock)
       form_layout.addRow("가격(원) : ", self.input_price)
 
-    elif self.mode == "edit_stock" :
+    elif self.mode in ["edit", "edit_stock"] :
       self.lbl_info = QLabel(f"<b>제품명 : </b> {product_name}")
       layout.addWidget(self.lbl_info)
 
@@ -78,7 +78,13 @@ class InventoryDialog(QDialog) :
       self.input_stock.setRange(0, 9999)
       self.input_stock.setValue(current_stock)
 
+      self.input_price = QSpinBox()
+      self.input_price.setRange(0, 10000000)
+      self.input_price.setSingleStep(1000)
+      self.input_price.setValue(current_price)
+
       form_layout.addRow("수량 변경 : ", self.input_stock)
+      form_layout.addRow("가격 변경(원) : ", self.input_price)
 
     layout.addLayout(form_layout)
 
@@ -128,9 +134,10 @@ class InventoryDialog(QDialog) :
       else :
         QMessageBox.critical(self, "오류", "유니폼 등록에 실패했습니다.")
 
-    elif self.mode == "edit_stock" :
+    elif self.mode in ["edit", "edit_stock"] :
       new_stock = self.input_stock.value()
-      ok = self.db.update_stock(self.jersey_id, new_stock, is_admin = self.is_admin)
+      new_price = self.input_price.value()
+      ok = self.db.update_stock(id = self.jersey_id, new_stock = new_stock, new_price = new_price, is_admin = self.is_admin)
 
       if ok :
         QMessageBox.information(self, "성공", "수량이 수정되었습니다.")
