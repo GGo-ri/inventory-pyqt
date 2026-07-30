@@ -33,6 +33,7 @@ class LoginDialog(QDialog) :
     self.btn_guest = QPushButton("GUEST\nLOGIN")
     self.btn_guest.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
     self.btn_guest.setStyleSheet("font-weight : bold; font-size : 14px;")
+    self.btn_guest.setFocusPolicy(Qt.NoFocus)
     self.btn_guest.clicked.connect(self.try_guest)
 
     main_layout = QHBoxLayout()
@@ -40,6 +41,8 @@ class LoginDialog(QDialog) :
     main_layout.addWidget(self.btn_guest, stretch = 2)
 
     self.setLayout(main_layout)
+
+    self.username.setFocus()
 
   def try_login(self) :
     uid = self.username.text().strip()
