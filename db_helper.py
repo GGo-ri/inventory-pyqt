@@ -19,7 +19,7 @@ class DB :
     return pymysql.connect(**self.config)
 
   # 로그인 검증
-  def verity_admin(self, username, password) :
+  def verify_admin(self, username, password) :
     sql = """
         SELECT COUNT(*) AS cnt 
         FROM users
@@ -34,7 +34,7 @@ class DB :
   # 조회
   def fetch_jerseys_by_team(self, team_keyword) :
     sql = """
-        SELECT id, serial_number, back_number, product_number, jersey_type, stock, price
+        SELECT id, serial_number, back_number, product_name, jersey_type, stock, price
         FROM jerseys
         WHERE product_name LIKE %s
         ORDER BY back_number ASC
@@ -60,3 +60,61 @@ class DB :
       with conn.cursor() as cur :
         cur.execute(sql, (team_kw, search_kw, search_kw, search_kw))
         return cur.fetchall()
+
+  # 추가
+  def add_jersey(self, serial_number, back_number, product_name, jersey_type, stock, price, is_admin = False) :
+    if not is_admin :
+      return False
+
+    sql = """
+        INSERT INTO jerseys (serial_number, back_number, product_name, jersey_type, stock, price)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    with self.connect() as conn :
+      try :
+        with conn.cursor() as cur :
+          cur.execute(sql, (serial_number, back_number, product_name, jersey_type, stock, price))
+        conn.commit()
+        return True
+      except Exception as e :
+        print(f"[Error] 유니폼 등록 실패 : {e}")
+        conn.rollback()
+        return False
+
+  # 수정
+  def update_jersey(self, id, serial_number, back_number, product_name, jersey_type, stock, price, is_admin = False) :
+    if not is_admin :
+      return False
+
+    sql = """
+        UPDATE jerseys
+        SET serial_number = %s, back_number = %s, product_name = %s, jersey_type = %s, stock = %s, price = %s
+        WHERE id = %s
+    """
+    with self.connect() as conn :
+      try :
+        with conn.cursor() as cur :
+          cur.execute(sql, (serial_number, back_number, product_name, jersey_type, stock, price, id))
+        conn.commit()
+        return True
+      except Exception as e:
+        print(f"[Error] 유니폼 수정 실패 : {e}")
+        conn.rollback()
+        return False
+
+  # 삭제
+  def delete_jersey(self, id, is_admin=False):
+    if not is_admin:
+        return False
+
+    sql = "DELETE FROM jerseys WHERE id = %s"
+    with self.connect() as conn :
+      try :
+        with conn.cursor() as cur :
+          cur.execute(sql, (id,))
+        conn.commit()
+        return True
+      except Exception as e:
+        print(f"[Error] 유니폼 삭제 실패 : {e}")
+        conn.rollback()
+        return False
