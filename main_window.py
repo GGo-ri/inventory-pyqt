@@ -121,9 +121,15 @@ class MainWindow(QMainWindow) :
     self.btn_edit = QPushButton("재고 수량 수정")
     self.btn_delete = QPushButton("유니폼 삭제")
 
-    self.btn_add.setFixedHeight(40)
-    self.btn_edit.setFixedHeight(40)
-    self.btn_delete.setFixedHeight(40)
+    button_style = """
+        QPushButton {
+            font-size: 14px;
+            font-weight: bold;
+        }
+    """
+    for btn in (self.btn_add, self.btn_edit, self.btn_delete) :
+      btn.setFixedHeight(40)
+      btn.setStyleSheet(button_style)
 
     self.btn_add.clicked.connect(self.open_add_dialog)
     self.btn_edit.clicked.connect(self.open_edit_dialog)
