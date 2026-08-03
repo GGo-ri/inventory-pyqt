@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QFormLayout, QLineEdit, QComboBox, QSpinBox, QPushButton, QMessageBox, QLabel)
-from PyQt5.QtCore import Qt
 from db_helper import DB, DB_CONFIG
 
 class InventoryDialog(QDialog) :
@@ -70,7 +69,7 @@ class InventoryDialog(QDialog) :
       form_layout.addRow("수량 : ", self.input_stock)
       form_layout.addRow("가격(원) : ", self.input_price)
 
-    elif self.mode in ["edit", "edit_stock"] :
+    elif self.mode in "edit" :
       self.lbl_info = QLabel(f"<b>제품명 : </b> {product_name}")
       layout.addWidget(self.lbl_info)
 
@@ -134,7 +133,7 @@ class InventoryDialog(QDialog) :
       else :
         QMessageBox.critical(self, "오류", "유니폼 등록에 실패했습니다.")
 
-    elif self.mode in ["edit", "edit_stock"] :
+    elif self.mode in "edit" :
       new_stock = self.input_stock.value()
       new_price = self.input_price.value()
       ok = self.db.update_stock(id = self.jersey_id, new_stock = new_stock, new_price = new_price, is_admin = self.is_admin)
