@@ -55,7 +55,7 @@ class MainWindow(QMainWindow) :
 
     title = QLabel("프리미어리그 팀 선택")
     title.setAlignment(Qt.AlignCenter)
-    title.setStyleSheet("font-size: 20px; font-weight: bold; margin-bottom: 10px")
+    title.setStyleSheet("font-size: 30px; font-weight: bold; margin-bottom: 10px")
     layout.addWidget(title)
 
     for team_name in self.teams:
