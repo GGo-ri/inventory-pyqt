@@ -232,19 +232,11 @@ class MainWindow(QMainWindow) :
     korean_team_name = self.current_team.split("(")[0].strip()
     team_code = self.team_code_map.get(korean_team_name, "")
 
-    rows = self.db.get_jerseys(team = korean_team_name)
-
     if query :
-      filtered_rows = []
-      for row in rows :
-        number = str(row[2]).lower()
-        product_name = str(row[3]).lower()
+      rows = self.db.search_jerseys(korean_team_name, query)
+    else :
+      rows = self.db.get_jerseys(team = korean_team_name)
 
-        if query in number or query in product_name :
-          filtered_rows.append(row)
-      rows = filtered_rows
-
-    rows = sorted(rows, key = lambda x: int(x[2]))
     self.display_rows_in_table(rows, korean_team_name, team_code)
 
   # 유니폼 신규 등록
