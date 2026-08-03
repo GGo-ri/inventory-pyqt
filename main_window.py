@@ -187,7 +187,6 @@ class MainWindow(QMainWindow) :
     team_code = self.team_code_map.get(korean_team_name, "")
 
     rows = self.db.get_jerseys(team = korean_team_name)
-    rows = sorted(rows, key = lambda x: int(x[2]))
     self.display_rows_in_table(rows, korean_team_name, team_code)
 
   def display_rows_in_table(self, rows, korean_team_name, team_code) :
@@ -302,10 +301,3 @@ class MainWindow(QMainWindow) :
         self.load_data()
       else :
         QMessageBox.critical(self, "오류", "삭제에 실패했습니다.")
-
-if __name__ == "__main__" :
-  app = QApplication(sys.argv)
-
-  window = MainWindow(is_admin = True)
-  window.show()
-  sys.exit(app.exec_())
