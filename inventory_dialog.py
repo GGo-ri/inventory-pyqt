@@ -8,7 +8,7 @@ class InventoryDialog(QDialog) :
     self.selected_team = selected_team
     self.jersey_id = jersey_id
     self.is_admin = is_admin
-    self.db = DB(**DB_CONFIG)
+    self.db = parent.db if parent else DB(**DB_CONFIG)
 
     self.team_codes = {
       "맨체스터 시티(Manchester City)" : "10",
@@ -69,7 +69,7 @@ class InventoryDialog(QDialog) :
       form_layout.addRow("수량 : ", self.input_stock)
       form_layout.addRow("가격(원) : ", self.input_price)
 
-    elif self.mode in "edit" :
+    elif self.mode == "edit" :
       self.lbl_info = QLabel(f"<b>제품명 : </b> {product_name}")
       layout.addWidget(self.lbl_info)
 
@@ -133,7 +133,7 @@ class InventoryDialog(QDialog) :
       else :
         QMessageBox.critical(self, "오류", "유니폼 등록에 실패했습니다.")
 
-    elif self.mode in "edit" :
+    elif self.mode == "edit" :
       new_stock = self.input_stock.value()
       new_price = self.input_price.value()
       ok = self.db.update_stock(id = self.jersey_id, new_stock = new_stock, new_price = new_price, is_admin = self.is_admin)
