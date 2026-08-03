@@ -60,7 +60,7 @@ class DB :
         cur.execute(sql, (team_kw, search_kw, search_kw, search_kw))
         return cur.fetchall()
 
-  # 추가
+  # 추가(관리자 전용)
   def add_jersey(self, serial_number, back_number, product_name, jersey_type, stock, price, is_admin = False) :
     if not is_admin :
       return False
@@ -80,7 +80,7 @@ class DB :
         conn.rollback()
         return False
 
-  # 수정
+  # 수정(관리자 전용)
   def update_stock(self, id, new_stock, new_price, is_admin = False) :
     if not is_admin :
       return False
@@ -97,7 +97,7 @@ class DB :
         conn.rollback()
         return False
 
-  # 삭제
+  # 삭제(관리자 전용)
   def delete_jersey(self, id, is_admin = False):
     if not is_admin:
         return False
