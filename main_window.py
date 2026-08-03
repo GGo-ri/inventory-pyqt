@@ -15,6 +15,7 @@ class MainWindow(QMainWindow) :
     self.db = DB(**DB_CONFIG)
     self.current_team = None
 
+    # 선정된 EPL 팀 목록
     self.teams = [
       "맨체스터 시티(Manchester City)",
       "리버풀(Liverpool)",
@@ -24,6 +25,7 @@ class MainWindow(QMainWindow) :
       "맨체스터 유나이티드(Manchester United)",
     ]
 
+    # 팀 약어
     self.team_code_map = {
       "맨체스터 시티" : "MCI",
       "리버풀" : "LIV",
@@ -33,6 +35,7 @@ class MainWindow(QMainWindow) :
       "맨체스터 유나이티드" : "MUN",
     }
 
+    # 각 팀 이미지
     self.team_icon_map = {
       "맨체스터 시티(Manchester City)" : "mci.png",
       "리버풀(Liverpool)" : "liv.png",
@@ -42,10 +45,12 @@ class MainWindow(QMainWindow) :
       "맨체스터 유나이티드(Manchester United)" : "mun.png",
     }
 
+    # 현재 로그인 상태 표시(관리자 / 게스트)
     self.setWindowTitle(f"유니폼 재고 관리 시스템 ({'관리자 권한' if self.is_admin else '게스트 모드'})")
     self.resize(500, 650)
     self.setMinimumSize(500, 650)
 
+    # 화면 전환
     self.stack = QStackedWidget()
     self.setCentralWidget(self.stack)
 
@@ -122,6 +127,7 @@ class MainWindow(QMainWindow) :
 
     header_layout.addStretch(1)
 
+    # 검색 기능
     self.input_search = QLineEdit()
     self.input_search.setPlaceholderText("예시 : 홀란, 9")
     self.input_search.setFixedWidth(320)
@@ -140,6 +146,7 @@ class MainWindow(QMainWindow) :
 
     layout.addLayout(header_layout)
 
+    # 유니폼 재고 테이블
     self.table = QTableWidget()
     self.table.setColumnCount(7)
     self.table.setHorizontalHeaderLabels(
@@ -158,6 +165,7 @@ class MainWindow(QMainWindow) :
 
     layout.addWidget(self.table)
 
+    # 관리자 기능 버튼
     btn_layout = QHBoxLayout()
 
     self.btn_add = QPushButton("신규 유니폼 등록")
@@ -182,6 +190,7 @@ class MainWindow(QMainWindow) :
     btn_layout.addWidget(self.btn_edit)
     btn_layout.addWidget(self.btn_delete)
 
+    # 게스트는 비활성화
     if not self.is_admin :
       self.btn_add.setEnabled(False)
       self.btn_edit.setEnabled(False)
@@ -216,6 +225,7 @@ class MainWindow(QMainWindow) :
     self.resize(500, 650)
     self.stack.setCurrentIndex(0)
 
+  # 조회
   def load_data(self) :
     if not self.current_team :
       return
@@ -260,6 +270,7 @@ class MainWindow(QMainWindow) :
 
         self.table.setItem(row_idx, col_idx, item)
 
+  # 검색 기능
   def perform_search(self) :
     if not self.current_team :
       return
