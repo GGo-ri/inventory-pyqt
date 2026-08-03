@@ -11,6 +11,7 @@ class LoginDialog(QDialog) :
     self.db = DB(**DB_CONFIG)
     self.is_guest = False
 
+    # 로그인 창 내부 위젯
     self.username = QLineEdit()
     self.username.setPlaceholderText("아이디")
     self.username.setFixedHeight(40)
@@ -30,10 +31,10 @@ class LoginDialog(QDialog) :
     left_layout.addWidget(self.password)
     left_layout.addWidget(self.btn_login)
 
+    # GUEST LOGIN 버튼
     self.btn_guest = QPushButton("GUEST\nLOGIN")
     self.btn_guest.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
     self.btn_guest.setStyleSheet("font-weight : bold; font-size : 18px;")
-    self.btn_guest.setFocusPolicy(Qt.NoFocus)
     self.btn_guest.clicked.connect(self.try_guest)
 
     main_layout = QHBoxLayout()
@@ -44,6 +45,7 @@ class LoginDialog(QDialog) :
 
     self.username.setFocus()
 
+  # 로그인 시도
   def try_login(self) :
     uid = self.username.text().strip()
     pw = self.password.text().strip()
@@ -59,6 +61,7 @@ class LoginDialog(QDialog) :
     else :
       QMessageBox.critical(self, "실패", "아이디 또는 비밀번호가 올바르지 않습니다.")
 
+  # 게스트 로그인
   def try_guest(self) :
     self.is_guest = True
     self.accept()
