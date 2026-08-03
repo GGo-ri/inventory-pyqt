@@ -114,10 +114,9 @@ class InventoryDialog(QDialog) :
 
   # 일련번호 자동 생성
   def generate_serial_number(self, team_display_name, j_type, back_num) :
-    t_code = self.team_codes.get(team_display_name, "10")
+    t_code = self.team_codes[team_display_name]
     num_code = f"{back_num:02d}"
-    type_code = self.type_codes.get(j_type, "0")
-
+    type_code = self.type_codes[j_type]
     return f"{t_code}{num_code}{type_code}"
 
   # 제품 정보 저장
