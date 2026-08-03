@@ -1,12 +1,12 @@
 import sys
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import (
     QAbstractItemView, QHBoxLayout, QHeaderView, QLabel, QLineEdit, QMainWindow, QMessageBox, QPushButton, QStackedWidget, QTableWidget,
     QTableWidgetItem, QVBoxLayout, QWidget,
 )
 from db_helper import DB, DB_CONFIG
 from inventory_dialog import InventoryDialog
-from PyQt5.QtGui import QColor, QPixmap
+from PyQt5.QtGui import QColor, QPixmap, QIcon
 
 class MainWindow(QMainWindow) :
   def __init__(self, is_admin = False) :
@@ -31,6 +31,15 @@ class MainWindow(QMainWindow) :
       "첼시" : "CHE",
       "아스널" : "ARS",
       "맨체스터 유나이티드" : "MUN",
+    }
+
+    self.team_icon_map = {
+      "맨체스터 시티(Manchester City)" : "mci.png",
+      "리버풀(Liverpool)" : "liv.png",
+      "애스턴 빌라(Aston Villa)" : "avl.png",
+      "첼시(Chelsea)" : "che.png",
+      "아스널(Arsenal)" : "ars.png",
+      "맨체스터 유나이티드(Manchester United)" : "mun.png",
     }
 
     self.setWindowTitle(f"유니폼 재고 관리 시스템 ({'관리자 권한' if self.is_admin else '게스트 모드'})")
@@ -68,8 +77,14 @@ class MainWindow(QMainWindow) :
     layout.addWidget(title)
 
     for team_name in self.teams:
-      btn = QPushButton(team_name)
+      btn = QPushButton(f" {team_name}")
       btn.setFixedHeight(50)
+
+      icon_file = self.team_icon_map.get(team_name, "")
+      if icon_file :
+        btn.setIcon(QIcon(icon_file))
+        btn.setIconSize(QSize(32, 32))
+
       btn.setStyleSheet("""
           QPushButton {
               font-size: 17px;
@@ -97,6 +112,9 @@ class MainWindow(QMainWindow) :
     layout.setSpacing(10)
 
     header_layout = QHBoxLayout()
+
+    self.lbl_team_logo = QLabel()
+    header_layout.addWidget(self.lbl_team_logo)
 
     self.lbl_team_title = QLabel("")
     self.lbl_team_title.setStyleSheet("font-size: 18px; font-weight: bold;")
@@ -178,6 +196,13 @@ class MainWindow(QMainWindow) :
     self.current_team = team_display_name
     korean_team_name = team_display_name.split("(")[0].strip()
     self.lbl_team_title.setText(f"[{korean_team_name}] 유니폼 재고 현황")
+
+    icon_file = self.team_icon_map.get(team_display_name, "")
+    if icon_file :
+      self.lbl_team_logo.setPixmap(QIcon(icon_file).pixmap(QSize(32, 32)))
+      self.lbl_team_logo.show()
+    else :
+      self.lbl_team_logo.hide()
 
     self.input_search.clear()
 
