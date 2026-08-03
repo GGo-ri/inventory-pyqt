@@ -42,7 +42,7 @@ class DB :
     with self.connect() as conn :
       with conn.cursor() as cur :
         cur.execute(sql, (query_kw,))
-        return list(cur.fetchall())
+        return cur.fetchall()
       
   # 검색
   def search_jerseys(self, team_keyword, search_keyword) :
