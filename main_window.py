@@ -35,6 +35,7 @@ class MainWindow(QMainWindow) :
 
     self.setWindowTitle(f"유니폼 재고 관리 시스템 ({'관리자 권한' if self.is_admin else '게스트 모드'})")
     self.resize(500, 650)
+    self.setMinimumSize(500, 650)
 
     self.stack = QStackedWidget()
     self.setCentralWidget(self.stack)
@@ -49,8 +50,8 @@ class MainWindow(QMainWindow) :
   def create_team_select_page(self) :
     page = QWidget()
     layout = QVBoxLayout()
-    layout.setContentsMargins(40, 40, 40, 40)
-    layout.setSpacing(12)
+    layout.setContentsMargins(30, 30, 30, 30)
+    layout.setSpacing(10)
 
     title = QLabel("프리미어리그 팀 선택")
     title.setAlignment(Qt.AlignCenter)
@@ -59,7 +60,7 @@ class MainWindow(QMainWindow) :
 
     for team_name in self.teams:
       btn = QPushButton(team_name)
-      btn.setFixedHeight(55)
+      btn.setFixedHeight(50)
       btn.setStyleSheet("""
           QPushButton {
               font-size: 15px;
@@ -172,10 +173,12 @@ class MainWindow(QMainWindow) :
     self.input_search.clear()
 
     self.load_data()
+    self.setMinimumSize(800, 500)
     self.resize(1000, 600)
     self.stack.setCurrentIndex(1)
 
   def go_to_team_select(self) :
+    self.setMinimumSize(500, 650)
     self.resize(500, 650)
     self.stack.setCurrentIndex(0)
 
