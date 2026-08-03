@@ -10,6 +10,7 @@ class InventoryDialog(QDialog) :
     self.is_admin = is_admin
     self.db = parent.db if parent else DB(**DB_CONFIG)
 
+    # 일련번호 생성 코드
     self.team_codes = {
       "맨체스터 시티(Manchester City)" : "10",
       "리버풀(Liverpool)" : "20",
@@ -25,38 +26,46 @@ class InventoryDialog(QDialog) :
       self.setWindowTitle("신규 유니폼 등록")
       self.resize(380, 280)
     else :
-      self.setWindowTitle("재고 수량 수정")
+      self.setWindowTitle("재고 수정")
       self.resize(300, 150)
 
     self.init_ui(product_name, current_stock, current_price)
 
+  # UI 구성
   def init_ui(self, product_name, current_stock, current_price) :
     layout = QVBoxLayout()
     form_layout = QFormLayout()
 
+    # 신규 등록 시 콤보 박스로 팀 선택
     if self.mode == "add" :
       self.combo_team = QComboBox()
       self.combo_team.addItems(list(self.team_codes.keys()))
 
+      # 현재 선택된 팀이 콤보 박스 기본값
       if self.selected_team :
         for idx, team_text in enumerate(self.team_codes.keys()) :
           if self.selected_team in team_text :
             self.combo_team.setCurrentIndex(idx)
             break
 
+      # 등번호
       self.input_back_num = QSpinBox()
       self.input_back_num.setRange(1, 99)
 
+      # 선수명
       self.input_name = QLineEdit()
       self.input_name.setPlaceholderText("예: 엘링 홀란")
 
+      # 유니폼 종류
       self.combo_type = QComboBox()
       self.combo_type.addItems(list(self.type_codes.keys()))
 
+      # 재고 수량
       self.input_stock = QSpinBox()
       self.input_stock.setRange(0, 9999)
       self.input_stock.setValue(1)
 
+      # 가격
       self.input_price = QSpinBox()
       self.input_price.setRange(0, 10000000)
       self.input_price.setSingleStep(10000)
@@ -69,14 +78,17 @@ class InventoryDialog(QDialog) :
       form_layout.addRow("수량 : ", self.input_stock)
       form_layout.addRow("가격(원) : ", self.input_price)
 
+    # 재고 수정 시 선택된 유니폼 정보 출력
     elif self.mode == "edit" :
       self.lbl_info = QLabel(f"<b>제품명 : </b> {product_name}")
       layout.addWidget(self.lbl_info)
 
+      # 수량 변경 입력
       self.input_stock = QSpinBox()
       self.input_stock.setRange(0, 9999)
       self.input_stock.setValue(current_stock)
 
+      # 가격 변경 입력
       self.input_price = QSpinBox()
       self.input_price.setRange(0, 10000000)
       self.input_price.setSingleStep(1000)
@@ -100,6 +112,7 @@ class InventoryDialog(QDialog) :
 
     self.setLayout(layout)
 
+  # 일련번호 자동 생성
   def generate_serial_number(self, team_display_name, j_type, back_num) :
     t_code = self.team_codes.get(team_display_name, "10")
     num_code = f"{back_num:02d}"
@@ -107,6 +120,7 @@ class InventoryDialog(QDialog) :
 
     return f"{t_code}{num_code}{type_code}"
 
+  # 제품 정보 저장
   def save_data(self) :
     if self.mode == "add" :
       selected_team = self.combo_team.currentText()
@@ -133,6 +147,7 @@ class InventoryDialog(QDialog) :
       else :
         QMessageBox.critical(self, "오류", "유니폼 등록에 실패했습니다.")
 
+    # 재고 수정
     elif self.mode == "edit" :
       new_stock = self.input_stock.value()
       new_price = self.input_price.value()
