@@ -1,12 +1,12 @@
 import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QApplication, QHBoxLayout, QHeaderView, QLabel, QLineEdit, QMainWindow, QMessageBox, QPushButton, QStackedWidget, QTableWidget,
+    QAbstractItemView, QHBoxLayout, QHeaderView, QLabel, QLineEdit, QMainWindow, QMessageBox, QPushButton, QStackedWidget, QTableWidget,
     QTableWidgetItem, QVBoxLayout, QWidget,
 )
 from db_helper import DB, DB_CONFIG
 from inventory_dialog import InventoryDialog
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QPixmap
 
 class MainWindow(QMainWindow) :
   def __init__(self, is_admin = False) :
@@ -53,9 +53,18 @@ class MainWindow(QMainWindow) :
     layout.setContentsMargins(30, 30, 30, 30)
     layout.setSpacing(10)
 
-    title = QLabel("프리미어리그 팀 선택")
+    logo_label = QLabel()
+    pixmap = QPixmap("epl_logo.png")
+
+    if not pixmap.isNull() :
+      pixmap = pixmap.scaledToWidth(260, Qt.SmoothTransformation)
+      logo_label.setPixmap(pixmap)
+      logo_label.setAlignment(Qt.AlignCenter)
+      layout.addWidget(logo_label)
+
+    title = QLabel("[프리미어리그 팀 선택]")
     title.setAlignment(Qt.AlignCenter)
-    title.setStyleSheet("font-size: 30px; font-weight: bold; margin-bottom: 10px")
+    title.setStyleSheet("font-size: 26px; font-weight: bold; margin-bottom: 10px")
     layout.addWidget(title)
 
     for team_name in self.teams:
@@ -63,7 +72,7 @@ class MainWindow(QMainWindow) :
       btn.setFixedHeight(50)
       btn.setStyleSheet("""
           QPushButton {
-              font-size: 15px;
+              font-size: 17px;
               font-weight: bold;
               background-color: #f8f9fa;
               border: 1px solid #ced4da;
