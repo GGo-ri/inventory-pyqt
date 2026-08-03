@@ -1,4 +1,3 @@
-import sys
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import (
     QAbstractItemView, QHBoxLayout, QHeaderView, QLabel, QLineEdit, QMainWindow, QMessageBox, QPushButton, QStackedWidget, QTableWidget,
